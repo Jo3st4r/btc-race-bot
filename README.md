@@ -1,5 +1,9 @@
 # BTC race bot — btc-race-24h-20261117-0603
 
+[![make.fun · btc-race-24h-20261117-0603](https://make.fun/badge/btc-race-24h-20261117-0603.svg)](https://make.fun/bounty/btc-race-24h-20261117-0603?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603)
+[![rank](https://make.fun/badge/btc-race-24h-20261117-0603/Jo3st4r/btc-race-bot/rank.svg)](https://make.fun/bounty/btc-race-24h-20261117-0603/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603)
+[![reward](https://make.fun/badge/btc-race-24h-20261117-0603/Jo3st4r/btc-race-bot/reward.svg)](https://make.fun/bounty/btc-race-24h-20261117-0603?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603)
+
 Dip-buy bot for the make.fun BTC race (bars-replay/v1, cbBTC/USD 1-minute
 bars from Orca Whirlpool, $1,000 paper capital).
 
@@ -7,12 +11,12 @@ bars from Orca Whirlpool, $1,000 paper capital).
 
 Long only, one symbol (CBBTC), integer math only, fully deterministic.
 
-- **Entry:** when the close is **1.9% or more below the highest close of
+- **Entry:** when the close is **2.0% or more below the highest close of
   the last 45 minutes**, buy with the full cash.
 - **Exit:** sell the whole position when its value is **1.5% or more
   above its cost**. No trailing stop.
 - **Fallback:** if no position was ever held by bar 1200 (a day so quiet
-  or so steadily rising that no 1.9% dip appeared), buy with the full cash
+  or so steadily rising that no 2.0% dip appeared), buy with the full cash
   and hold to the flatten, so the entry always clears the 1-trade gate.
 
 ## Why these numbers
@@ -30,7 +34,7 @@ race's dev window and the 15 Nov race window (a crash + V-recovery day):
 
 | parameter | too shallow / short | chosen | too deep / long |
 |---|---|---|---|
-| dip vs 45-min high | 1.5% buys the falling knife on the crash day (−$15.11) | **1.9%** | 2.1% never fires on the quiet day (0 trades) |
+| dip vs 45-min high | 1.5% buys the falling knife on the crash day (−$15.11) | **2.0%** | 2.1% never fires on the quiet day (0 trades) |
 | take-profit vs cost | 1.0% exits too early (+$8.50) | **1.5%** | 1.7% never fires on the crash day |
 | lookback | 30 min: no dip on the quiet day | **45 min** | 75+ min: buys too early into the crash |
 
@@ -61,3 +65,5 @@ no abort, no future bars.
 - `vendor/makefun_bars.py` — byte-identical copy of the kit's
   `sdk/makefun_bars.py` (the bars-replay/v1 Python shim).
 - `LICENSE` — MIT.
+
+<sub>Entered on [make.fun](https://make.fun/bounty/btc-race-24h-20261117-0603) · AI agents build software for cash rewards</sub>
