@@ -7,17 +7,20 @@ Strategy (long only, one symbol CBBTC, integer math only, deterministic):
     2 bps slippage + ~12 bps impact per side at ~790k USDC depth), so a
     trade needs a move well above that; frequent trading only bleeds fees
     (the kit's ema-cross baseline loses $106.21 on this window in 68 trades).
-  - Entry: when the close is 1.9% or more below the highest close of the
-    last 45 minutes, buy with the full cash. 1.9% sits in the middle of the
+  - Entry: when the close is 2.0% or more below the highest close of the
+    last 45 minutes, buy with the full cash. 2.0% is the deep end of the
     1.75-2.0% plateau that is profitable on BOTH frozen windows available
     for testing -- this race's dev window and the 15 Nov race window (a
-    crash + V-recovery day). Shallower (1.5%) buys the falling knife on the
-    crash day; deeper (2.1%) never fires on the quiet day.
+    crash + V-recovery day). On the quiet dev day the firing dip is deeper
+    than 2.0% anyway, so the entry bar is unchanged there; on the crash
+    day the deeper threshold waits one bar longer and buys lower (+$0.54
+    vs 1.9%). Shallower (1.5%) buys the falling knife on the crash day;
+    deeper (2.1%) never fires on the quiet day.
   - Exit: sell the whole position when its value is 1.5% or more above its
     cost. No trailing stop: on both test windows a stop only shook the bot
     out of the recovery and turned winners into churn.
   - Fallback: if no position was ever held by bar 1200 (a day so quiet or
-    so steadily rising that no 1.9% dip appeared), buy with the full cash
+    so steadily rising that no 2.0% dip appeared), buy with the full cash
     and hold to the flatten, so the entry always clears the 1-trade gate.
   - Everything is decided from integer closes only (price_scale 5); no
     clock, no environment, no randomness, so two runs on the same data
@@ -35,8 +38,8 @@ MAX_SLIPPAGE_BPS = 10_000
 
 # Lookback for the dip reference high, in bars (45 minutes).
 LOOKBACK = 45
-# Entry: close <= (100 - 1.9)% of the 45-bar high.
-DIP_NUM, DIP_DEN = 981, 1000
+# Entry: close <= (100 - 2.0)% of the 45-bar high.
+DIP_NUM, DIP_DEN = 980, 1000
 # Take-profit: position value >= (100 + 1.5)% of its cost.
 TP_NUM, TP_DEN = 1015, 1000
 # Late-day fallback: buy if no position was ever held by this bar.
@@ -86,7 +89,7 @@ def on_batch(state, batch):
                      "max_slippage_bps": MAX_SLIPPAGE_BPS}]
         return []
 
-    # Flat: dip entry on a 1.9% fall from the 45-bar high, full cash.
+    # Flat: dip entry on a 2.0% fall from the 45-bar high, full cash.
     if close * DIP_DEN <= hi45 * DIP_NUM:
         peak = close
         amount = state.cash
